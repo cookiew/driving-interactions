@@ -57,7 +57,7 @@ def playground():
     dyn = dynamics.CarDynamics(0.1)
     world = World()
     clane = lane.StraightLane([0., -1.], [0., 1.], 0.17)
-    world.lanes += [clane, clane.shifted(1), clane.shifted(-1)]
+    world.lanes += [clane, clane.shifted(1), clane.shifted(-1)]     # lane centers, should stay close
     world.roads += [clane]
     world.fences += [clane.shifted(2), clane.shifted(-2)]
     #world.cars.append(car.UserControlledCar(dyn, [0., 0., math.pi/2., 0.], color='orange'))

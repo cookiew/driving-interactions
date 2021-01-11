@@ -31,9 +31,9 @@ def run_irl(world, car, reward, theta, data):
     L = tt.dot(g, tt.dot(tn.MatrixInverse()(H), g))+tt.log(tn.Det()(-H))
     for _ in gen():
         pass
-    optimizer = utils.Maximizer(L, [theta], gen=gen, method='gd', eps=0.1, debug=True, iters=1000, inf_ignore=10)
+    optimizer = utils.Maximizer(L, [theta], gen=gen, method='gd', eps=0.1, debug=True, iters=1000, inf_ignore=1e4)
     optimizer.maximize()
-    print theta.get_value()
+    print(theta.get_value())
 
 
 if __name__ == '__main__':
@@ -55,25 +55,28 @@ if __name__ == '__main__':
     T = the_car.traj.T
     train = []
     for fname in files:
-        with open(fname) as f:
+        with open(fname, "rb") as f:
             us, xs = pickle.load(f)
             for t in range(T, len(xs[0])-T, T):
+                # segment the whole trajectory by planning steps T, each xseq belongs to one car
                 point = {
                     'x0': [xseq[t-1] for xseq in xs],
                     'u': [useq[t:t+T] for useq in us]
                 }
                 train.append(point)
-    theta = utils.vector(5)
-    theta.set_value(np.array([1., -50., 10., 10., -60.]))
+
+    theta = utils.vector(3)
+    theta.set_value(np.array([1., 10., -60.]))
+    # note that this is reward, the higher the better
     r = 0.1*feature.control()
-    for lane in the_world.lanes:
+    for lane in the_world.lanes:    # close to lane center
         r = r + theta[0]*lane.gaussian()
-    for fence in the_world.fences:
-        r = r + theta[1]*lane.gaussian()
-    for road in the_world.roads:
-        r = r + theta[2]*road.gaussian(10.)
-    r = r + theta[3]*feature.speed(1.)
+    # for fence in the_world.fences:  # stay away from fences
+    #     r = r + theta[1]*lane.gaussian()
+    # for road in the_world.roads:     # close to center road
+    #     r = r + theta[2]*road.gaussian(10.)
+    r = r + theta[1]*feature.speed(1.)
     for car in the_world.cars:
         if car!=the_car:
-            r = r + theta[4]*car.traj.gaussian()
+            r = r + theta[2]*car.traj.gaussian()    # stay away from other cars
     run_irl(the_world, the_car, r, theta, train)

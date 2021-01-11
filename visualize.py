@@ -95,7 +95,7 @@ class Visualizer(object):
         if symbol == key.D:
             self.reset()
         if symbol == key.S:
-            with open('data/%s-%d.pickle'%(self.name, int(time.time())), 'w') as f:
+            with open('data/%s-%d.pickle'%(self.name, int(time.time())), 'wb') as f:
                 pickle.dump((self.history_u, self.history_x), f)
             self.reset()
     def control_loop(self, _=None):

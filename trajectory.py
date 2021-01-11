@@ -58,5 +58,5 @@ if __name__ == '__main__':
     t = time.time()
     for i in range(1):
         optimizer.maximize(bounds=[(-1., 1.), (-2, 2.)])
-    print (time.time()-t)/1.
-    print [u.get_value() for u in traj.u]
+    print((time.time()-t)/1.)
+    print([u.get_value() for u in traj.u])

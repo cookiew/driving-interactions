@@ -52,7 +52,7 @@ class UserControlledCar(Car):
     def control(self, steer, gas):
         if self.fixed_control is not None:
             self.u = self.fixed_control[0]
-            print self.fixed_control[0]
+            print(self.fixed_control[0])
             if len(self.fixed_control)>1:
                 self.fixed_control = self.fixed_control[1:]
         elif self.follow is None:
@@ -86,7 +86,7 @@ class SimpleOptimizerCar(Car):
         self._reward = reward+100.*feature.bounded_control(self.bounds)
         self.optimizer = None
     def control(self, steer, gas):
-        print len(self.cache)
+        print(len(self.cache))
         if self.index<len(self.cache):
             self.u = self.cache[self.index]
         else:

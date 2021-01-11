@@ -19,7 +19,7 @@ if __name__ == '__main__':
         ctrl = eval(sys.argv[-1])
         for car in world.cars:
             if isinstance(car, UserControlledCar):
-                print 'User Car'
+                print('User Car')
                 car.fix_control(ctrl)
     vis = visualize.Visualizer(0.1, name=name)
     vis.use_world(world)
